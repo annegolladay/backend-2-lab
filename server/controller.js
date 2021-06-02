@@ -15,7 +15,7 @@ module.exports = {
         const newHouse = {
             id: globalId,
             address: address,
-            price: price,
+            price: +price,
             imageURL: imageURL
         }
 
@@ -32,15 +32,30 @@ module.exports = {
             return house.id === +id
         })
 
-        const priceUpdate = houses[index].price
+        let priceUpdate = houses[index].price //have to spell out when actually trying to update the price in the if/else statements
 
-        if (type === 'plus') {
-            priceUpdate += 10000 
+        //most specific case goes first in the conditionals
+
+        if (priceUpdate <= 10000 && type === 'minus') {
+            houses[index].price = 0
+            res.status(200).send(houses)
+        } else if (type === 'plus') {
+            houses[index].price += 10000 
             res.status(200).send(houses)
         } else if (type === 'minus') {
-            priceUpdate -= 10000
+            houses[index].price -= 10000
             res.status(200).send(houses)
+        } else {
+            res.status(400).send('Update failed.')
         }
+
+        // if (type === 'plus') {
+        //     priceUpdate += 10000 
+        //     res.status(200).send(houses)
+        // } else if (type === 'minus') {
+        //     priceUpdate -= 10000
+        //     res.status(200).send(houses)
+        // }
         
     },
     deleteHouse: (req, res) => {
